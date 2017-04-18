@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Movie Tracker</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Navigation Drawer menu labels -->
+    <string name="nav_movies">Home</string>
+    <string name="nav_movie">Movies</string>
+    <string name="nav_rated">Rated</string>
+    <string name="nav_watched">Watched</string>
+    <string name="nav_shows">TV</string>
+    <string name="nav_people">People</string>
+    <string name="nav_my_lists">My Lists</string>
+    <string name="nav_box_office">Box Office</string>
+    <string name="nav_popular">Popular</string>
+
+    <!-- Toolbar titles when navigation menu item is selected -->
+    <string-array name="nav_item_activity_titles">
+        <item>Home</item>
+        <item>Movies</item>
+        <item>TV Show</item>
+        <item>People</item>
+    </string-array>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="error_message">Failed to get results. Please try again.</string>
+
+</resources>
