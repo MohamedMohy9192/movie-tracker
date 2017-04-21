@@ -4,24 +4,10 @@
     android:layout_height="match_parent"
     tools:context="com.era.www.movietracker.BoxOfficeFragment">
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_box_office"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            style="@style/TextAppearance.AppCompat.Title"
-            android:text="last weekend. Updated every Monday morning."/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_box_office"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
+        android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/pb_loading_indicator"

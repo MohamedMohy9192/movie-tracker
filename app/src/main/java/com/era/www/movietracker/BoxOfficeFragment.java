@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,9 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.era.www.movietracker.BoxOfficeAdapter.BoxOfficeAdapterOnClickHandler;
 import com.era.www.movietracker.utilities.NetworkUtils;
 import com.era.www.movietracker.utilities.TraktTvAPIJsonUtils;
-import com.era.www.movietracker.BoxOfficeAdapter.BoxOfficeAdapterOnClickHandler;
 
 import java.net.URL;
 
@@ -99,8 +100,12 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
         /* This TextView is used to display errors and will be hidden if there are no errors */
         mErrorMessageTextView = (TextView) view.findViewById(R.id.tv_error_message);
 
+        mBoxOfficeAdapter.setHeaderString("Weekend of April 14 - 16, 2017");
+
         return view;
     }
+
+
 
     private void showResultData() {
 
