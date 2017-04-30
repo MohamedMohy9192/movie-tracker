@@ -9,12 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,44 +32,60 @@ public class MoviesFragment extends Fragment {
 
         AppBarLayout appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.app_bar);
 
-        TabLayout layout = (TabLayout) getActivity().findViewById(R.id.main_tab_layout);
-
-        if (layout.getVisibility() == View.GONE) {
-            layout.setVisibility(View.VISIBLE);
-        }
-        CollapsingToolbarLayout.LayoutParams params = (CollapsingToolbarLayout.LayoutParams) layout.getLayoutParams();
-
-        if (params.getCollapseMode() == CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_OFF) {
-
-            params.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN);
-            layout.setLayoutParams(params);
-        }
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.main_tab_layout);
+        setTabLayoutCollapseMode(tabLayout);
 
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        setToolbarCollapseMode(toolbar);
 
-        CollapsingToolbarLayout.LayoutParams toolbarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-
-        Log.i(LOG_TAG, "toolbarParams before " + toolbarParams.getCollapseMode());
-
-        if (toolbarParams.getCollapseMode() == CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN) {
-
-            toolbarParams.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PARALLAX);
-            toolbar.setLayoutParams(toolbarParams);
-            Log.i(LOG_TAG, "toolbarParams after " + toolbarParams.getCollapseMode());
-        }
-
-
+        //Set the AppBar expand to true to wrap the CollapsingToolbarLayout height.
         appBarLayout.setExpanded(true);
-
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
 
         setUpViewPager(viewPager);
 
-        layout.setupWithViewPager(viewPager);
-
+        tabLayout.setupWithViewPager(viewPager);
 
         return view;
+    }
+
+    /**
+     *
+     * @param tabLayout reference to TabLayout widget in app_bar_main.xml file.
+     * Use this method to change the TabLayout Collapse Mode to PIN if it's none
+     * and it's Visibility to Visible.
+     */
+    private void setTabLayoutCollapseMode(TabLayout tabLayout){
+        if (tabLayout.getVisibility() == View.GONE) {
+            tabLayout.setVisibility(View.VISIBLE);
+        }
+
+        CollapsingToolbarLayout.LayoutParams params =
+                (CollapsingToolbarLayout.LayoutParams) tabLayout.getLayoutParams();
+
+        if (params.getCollapseMode() ==
+                CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_OFF) {
+            params.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN);
+            tabLayout.setLayoutParams(params);
+        }
+    }
+
+    /**
+     *
+     * @param toolbar reference to Toolbar widget in app_bar_main.xml file.
+     * Use this method to change the Toolbar Collapse Mode to PARALLAX if it's PIN
+     */
+    private void setToolbarCollapseMode(Toolbar toolbar){
+        CollapsingToolbarLayout.LayoutParams toolbarParams =
+                (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+
+        if (toolbarParams.getCollapseMode() ==
+                CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN) {
+            toolbarParams.setCollapseMode(
+                    CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PARALLAX);
+            toolbar.setLayoutParams(toolbarParams);
+        }
     }
 
     private void setUpViewPager(ViewPager viewPager) {
@@ -115,5 +128,4 @@ public class MoviesFragment extends Fragment {
             fragmentTitlesList.add(title);
         }
     }
-
 }
