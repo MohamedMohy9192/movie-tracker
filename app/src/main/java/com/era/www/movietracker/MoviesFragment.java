@@ -1,19 +1,27 @@
 package com.era.www.movietracker;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MoviesFragment extends Fragment {
+
+    private static final String LOG_TAG = MoviesFragment.class.getSimpleName();
 
     public MoviesFragment() {
         // Required empty public constructor
@@ -25,12 +33,37 @@ public class MoviesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
 
+        AppBarLayout appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.app_bar);
 
         TabLayout layout = (TabLayout) getActivity().findViewById(R.id.main_tab_layout);
 
         if (layout.getVisibility() == View.GONE) {
             layout.setVisibility(View.VISIBLE);
         }
+        CollapsingToolbarLayout.LayoutParams params = (CollapsingToolbarLayout.LayoutParams) layout.getLayoutParams();
+
+        if (params.getCollapseMode() == CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_OFF) {
+
+            params.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN);
+            layout.setLayoutParams(params);
+        }
+
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+
+        CollapsingToolbarLayout.LayoutParams toolbarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+
+        Log.i(LOG_TAG, "toolbarParams before " + toolbarParams.getCollapseMode());
+
+        if (toolbarParams.getCollapseMode() == CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN) {
+
+            toolbarParams.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PARALLAX);
+            toolbar.setLayoutParams(toolbarParams);
+            Log.i(LOG_TAG, "toolbarParams after " + toolbarParams.getCollapseMode());
+        }
+
+
+        appBarLayout.setExpanded(true);
+
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
 
@@ -38,9 +71,6 @@ public class MoviesFragment extends Fragment {
 
         layout.setupWithViewPager(viewPager);
 
-
-//        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-//        tabLayout.setupWithViewPager(viewPager);
 
         return view;
     }

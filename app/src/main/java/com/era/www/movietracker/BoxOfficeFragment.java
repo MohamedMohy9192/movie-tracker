@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -187,6 +186,7 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
 
                 showResultData();
 
+                mBoxOfficeAdapter.setHeaderString("Weekend of April 14 - 16, 2017");
                 mBoxOfficeAdapter.setBoxOfficeData(boxOfficeData);
 
             } else {
