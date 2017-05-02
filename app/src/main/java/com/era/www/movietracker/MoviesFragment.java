@@ -33,6 +33,7 @@ public class MoviesFragment extends Fragment {
         AppBarLayout appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.app_bar);
 
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.main_tab_layout);
+
         setTabLayoutCollapseMode(tabLayout);
 
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);

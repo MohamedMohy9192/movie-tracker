@@ -99,8 +99,6 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
         /* This TextView is used to display errors and will be hidden if there are no errors */
         mErrorMessageTextView = (TextView) view.findViewById(R.id.tv_error_message);
 
-        mBoxOfficeAdapter.setHeaderString("Weekend of April 14 - 16, 2017");
-
         return view;
     }
 
@@ -185,8 +183,6 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
             if (boxOfficeData != null) {
 
                 showResultData();
-
-                mBoxOfficeAdapter.setHeaderString("Weekend of April 14 - 16, 2017");
                 mBoxOfficeAdapter.setBoxOfficeData(boxOfficeData);
 
             } else {

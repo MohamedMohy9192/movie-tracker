@@ -11,16 +11,11 @@ import android.widget.TextView;
  * {@link BoxOfficeAdapter} exposes a list of box office data to a
  * {@link android.support.v7.widget.RecyclerView}
  */
-public class BoxOfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxOfficeAdapterViewHolder> {
 
     private final static String LOG_TAG = BoxOfficeAdapter.class.getSimpleName();
 
-    private static final int TYPE_HEADER = 0;
-    private static final int TYPE_ITEM = 1;
-
     private String[] mBoxOfficeData;
-
-    private String mHeaderString;
 
     /**
      * An on-click handler that we've defined to make it easy for BoxOfficeFragment to interface with
@@ -57,24 +52,13 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * @return A new BoxOfficeAdapterViewHolder that holds the View for each list item
      */
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BoxOfficeAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        RecyclerView.ViewHolder viewHolder = null;
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View view = LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.box_office_movie_list_item, parent, false);
+        BoxOfficeAdapterViewHolder viewHolder = new BoxOfficeAdapterViewHolder(view);
 
-        switch (viewType) {
-            case TYPE_HEADER:
-                View headerView =
-                        layoutInflater.inflate(R.layout.box_office_header_list_item, parent, false);
-                viewHolder = new BoxOfficeHeaderViewHolder(headerView);
-                break;
-            case TYPE_ITEM:
-                View itemView =
-                        layoutInflater.inflate(R.layout.box_office_movie_list_item, parent, false);
-                viewHolder = new BoxOfficeAdapterViewHolder(itemView);
-                break;
-
-        }
         return viewHolder;
     }
 
@@ -89,20 +73,9 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(BoxOfficeAdapterViewHolder holder, int position) {
 
-        switch (holder.getItemViewType()) {
-
-            case TYPE_HEADER:
-                BoxOfficeHeaderViewHolder headerViewHolder = (BoxOfficeHeaderViewHolder) holder;
-                headerViewHolder.mHeaderTextView.setText(mHeaderString);
-                break;
-
-            case TYPE_ITEM:
-                BoxOfficeAdapterViewHolder boxOfficeAdapterViewHolder = (BoxOfficeAdapterViewHolder) holder;
-                boxOfficeAdapterViewHolder.mBoxOfficeTextView.setText(mBoxOfficeData[position - 1]);
-                break;
-        }
+        holder.mBoxOfficeTextView.setText(mBoxOfficeData[position]);
 
     }
 
@@ -117,17 +90,7 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (mBoxOfficeData == null) return 0;
 
-        return mBoxOfficeData.length + 1;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-
-        if (position == 0) {
-            return TYPE_HEADER;
-        }
-
-        return TYPE_ITEM;
+        return mBoxOfficeData.length;
     }
 
     /**
@@ -142,10 +105,6 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
-    public void setHeaderString(String headerString) {
-        this.mHeaderString = headerString;
-        notifyDataSetChanged();
-    }
 
     /**
      * Cache of the children views for a BoxOffice list item.
@@ -180,16 +139,4 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             mClickHandler.onClick(boxOfficeMovie);
         }
     }
-
-    public class BoxOfficeHeaderViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView mHeaderTextView;
-
-        public BoxOfficeHeaderViewHolder(View itemView) {
-            super(itemView);
-
-            mHeaderTextView = (TextView) itemView.findViewById(R.id.tv_header);
-        }
-    }
-
 }
