@@ -7,6 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.era.www.movietracker.model.BoxOfficeMovie;
+
+import java.text.DecimalFormat;
+import java.util.List;
+
 /**
  * {@link BoxOfficeAdapter} exposes a list of box office data to a
  * {@link android.support.v7.widget.RecyclerView}
@@ -15,7 +20,7 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
 
     private final static String LOG_TAG = BoxOfficeAdapter.class.getSimpleName();
 
-    private String[] mBoxOfficeData;
+    private List<BoxOfficeMovie> mBoxOfficeList;
 
     /**
      * An on-click handler that we've defined to make it easy for BoxOfficeFragment to interface with
@@ -75,8 +80,23 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     @Override
     public void onBindViewHolder(BoxOfficeAdapterViewHolder holder, int position) {
 
-        holder.mBoxOfficeTextView.setText(mBoxOfficeData[position]);
+        BoxOfficeMovie boxOfficeMovie = mBoxOfficeList.get(position);
 
+        holder.mMovieTitleTextView.setText(boxOfficeMovie.getName());
+
+        int movieRevenue = boxOfficeMovie.getRevenue();
+
+        double v = movieRevenue / 1000000.0;
+
+        DecimalFormat numberFormat = new DecimalFormat("$##.##M");
+
+        String formRevenue = numberFormat.format(v);
+
+        holder.mMovieRevenueTextView.setText(formRevenue);
+
+        String movieRank = Byte.toString(boxOfficeMovie.getRank());
+
+        holder.mMovieRankTextView.setText(movieRank);
     }
 
     /**
@@ -88,9 +108,9 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     @Override
     public int getItemCount() {
 
-        if (mBoxOfficeData == null) return 0;
+        if (mBoxOfficeList == null) return 0;
 
-        return mBoxOfficeData.length;
+        return mBoxOfficeList.size();
     }
 
     /**
@@ -98,10 +118,10 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
      * created one. This is handy when we get new data from the web but don't want to create a
      * new BoxOfficeAdapter to display it.
      *
-     * @param boxOfficeData The new weather data to be displayed.
+     * @param boxOfficeList The new Box Office  List to be displayed.
      */
-    public void setBoxOfficeData(String[] boxOfficeData) {
-        this.mBoxOfficeData = boxOfficeData;
+    public void setBoxOfficeData(List<BoxOfficeMovie> boxOfficeList) {
+        this.mBoxOfficeList = boxOfficeList;
         notifyDataSetChanged();
     }
 
@@ -112,7 +132,11 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     public class BoxOfficeAdapterViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        public final TextView mBoxOfficeTextView;
+        public final TextView mMovieTitleTextView;
+
+        public final TextView mMovieRevenueTextView;
+
+        public final TextView mMovieRankTextView;
 
         /**
          * This gets called by the child views during a click.
@@ -122,7 +146,11 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
         public BoxOfficeAdapterViewHolder(View itemView) {
             super(itemView);
 
-            mBoxOfficeTextView = (TextView) itemView.findViewById(R.id.tv_box_office_data);
+            mMovieTitleTextView = (TextView) itemView.findViewById(R.id.tv_movie_title);
+
+            mMovieRevenueTextView = (TextView) itemView.findViewById(R.id.tv_movie_revenue);
+
+            mMovieRankTextView = (TextView) itemView.findViewById(R.id.tv_movie_rank);
 
             itemView.setOnClickListener(this);
         }
@@ -132,11 +160,11 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
 
             int indexPosition = getAdapterPosition();
 
-            String boxOfficeMovie = mBoxOfficeData[indexPosition - 1];
+            BoxOfficeMovie boxOfficeMovie = mBoxOfficeList.get(indexPosition);
 
-            Log.i(LOG_TAG, "" + indexPosition);
+            String movie = boxOfficeMovie.getName() + " - " + boxOfficeMovie.getRevenue();
 
-            mClickHandler.onClick(boxOfficeMovie);
+            mClickHandler.onClick(movie);
         }
     }
 }

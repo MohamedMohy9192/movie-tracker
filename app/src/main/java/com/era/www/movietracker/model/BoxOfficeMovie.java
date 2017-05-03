@@ -10,9 +10,9 @@ public class BoxOfficeMovie {
 
     private int revenue;
 
-    private int rank;
+    private byte rank;
 
-    public BoxOfficeMovie(String name, int revenue, int rank) {
+    public BoxOfficeMovie(String name, int revenue, byte rank) {
         this.name = name;
         this.revenue = revenue;
         this.rank = rank;
@@ -34,11 +34,11 @@ public class BoxOfficeMovie {
         this.revenue = revenue;
     }
 
-    public int getRank() {
+    public byte getRank() {
         return rank;
     }
 
-    public void setRank(int rank) {
+    public void setRank(byte rank) {
         this.rank = rank;
     }
 }

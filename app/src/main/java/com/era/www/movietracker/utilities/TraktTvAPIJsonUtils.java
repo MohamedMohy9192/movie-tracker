@@ -1,26 +1,28 @@
 package com.era.www.movietracker.utilities;
 
 
+import com.era.www.movietracker.model.BoxOfficeMovie;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TraktTvAPIJsonUtils {
 
-    public static String[] BoxOfficeJsonStr(String boxOfficeJsonStr) throws JSONException {
+    public static List<BoxOfficeMovie> BoxOfficeJsonStr(String boxOfficeJsonStr) throws JSONException {
 
         final String MOVIE_INFO_KEY = "movie";
 
         final String MOVIE_TITLE_KEY = "title";
 
-        final String MOVIE_YEAR_KEY = "year";
-
         final String MOVIE_REVENUE_KEY = "revenue";
 
         JSONArray boxOfficeMoviesArray = new JSONArray(boxOfficeJsonStr);
 
-
-        String[] parsedBoxOfficeData = new String[boxOfficeMoviesArray.length()];
+        List<BoxOfficeMovie> boxOfficeMovies = new ArrayList<>();
 
         byte rank = 1;
 
@@ -30,20 +32,15 @@ public class TraktTvAPIJsonUtils {
 
             int movieRevenue = movieObject.getInt(MOVIE_REVENUE_KEY);
 
-            double douRevenue = movieRevenue / 1000000.0;
-
-            String s = "$" + douRevenue + "M";
-
             JSONObject movieInfo = movieObject.getJSONObject(MOVIE_INFO_KEY);
 
             String movieTitle = movieInfo.getString(MOVIE_TITLE_KEY);
 
-            int movieYear = movieInfo.getInt(MOVIE_YEAR_KEY);
+            BoxOfficeMovie boxOfficeMovie = new BoxOfficeMovie(movieTitle, movieRevenue, rank++);
 
-            parsedBoxOfficeData[i] = rank++ + " - " + movieTitle + " - " + movieYear + " - " + s;
-
+            boxOfficeMovies.add(boxOfficeMovie);
         }
 
-        return parsedBoxOfficeData;
+        return boxOfficeMovies;
     }
 }

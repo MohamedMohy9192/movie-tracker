@@ -15,10 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.era.www.movietracker.BoxOfficeAdapter.BoxOfficeAdapterOnClickHandler;
+import com.era.www.movietracker.model.BoxOfficeMovie;
 import com.era.www.movietracker.utilities.NetworkUtils;
 import com.era.www.movietracker.utilities.TraktTvAPIJsonUtils;
 
 import java.net.URL;
+import java.util.List;
 
 public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnClickHandler {
 
@@ -103,7 +105,6 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
     }
 
 
-
     private void showResultData() {
 
         // First, make sure the error is invisible
@@ -145,7 +146,7 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
         mToast.show();
     }
 
-    private class BoxOfficeAsyncTask extends AsyncTask<String, Void, String[]> {
+    private class BoxOfficeAsyncTask extends AsyncTask<String, Void, List<BoxOfficeMovie>> {
 
         @Override
         protected void onPreExecute() {
@@ -154,7 +155,7 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
         }
 
         @Override
-        protected String[] doInBackground(String... urls) {
+        protected List<BoxOfficeMovie> doInBackground(String... urls) {
 
             /* If there's no url, there's nothing to look up. */
             if (urls.length == 0) {
@@ -166,7 +167,7 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
             try {
                 String result = NetworkUtils.getResponseFromHttpUrl(url);
 
-                String[] parsedBoxOfficeData = TraktTvAPIJsonUtils.BoxOfficeJsonStr(result);
+                List<BoxOfficeMovie> parsedBoxOfficeData = TraktTvAPIJsonUtils.BoxOfficeJsonStr(result);
 
                 return parsedBoxOfficeData;
             } catch (Exception e) {
@@ -176,7 +177,7 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
         }
 
         @Override
-        protected void onPostExecute(String[] boxOfficeData) {
+        protected void onPostExecute(List<BoxOfficeMovie> boxOfficeData) {
 
             mLoadingIndicator.setVisibility(View.INVISIBLE);
 
