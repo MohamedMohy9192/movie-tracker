@@ -85,17 +85,12 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
         holder.mMovieTitleTextView.setText(boxOfficeMovie.getName());
 
         int movieRevenue = boxOfficeMovie.getRevenue();
-
         double v = movieRevenue / 1000000.0;
-
         DecimalFormat numberFormat = new DecimalFormat("$##.##M");
-
         String formRevenue = numberFormat.format(v);
-
         holder.mMovieRevenueTextView.setText(formRevenue);
 
         String movieRank = Byte.toString(boxOfficeMovie.getRank());
-
         holder.mMovieRankTextView.setText(movieRank);
     }
 

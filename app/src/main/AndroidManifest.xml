@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.era.www.movietracker">
 
-    <!--INTERNET permission to access internet connection-->
+    <!-- INTERNET permission to access internet connection -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -21,6 +21,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".detail.DetailActivity"
+            android:label="@string/title_activity_detail"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.era.www.movietracker.MainActivity" />
         </activity>
     </application>
 
