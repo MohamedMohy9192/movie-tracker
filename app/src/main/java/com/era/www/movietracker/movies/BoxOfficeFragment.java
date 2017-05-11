@@ -1,7 +1,6 @@
-package com.era.www.movietracker;
+package com.era.www.movietracker.movies;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,7 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.era.www.movietracker.BoxOfficeAdapter.BoxOfficeAdapterOnClickHandler;
+import com.era.www.movietracker.adapters.BoxOfficeAdapter;
+import com.era.www.movietracker.adapters.BoxOfficeAdapter.BoxOfficeAdapterOnClickHandler;
+import com.era.www.movietracker.R;
 import com.era.www.movietracker.detail.DetailActivity;
 import com.era.www.movietracker.model.BoxOfficeMovie;
 import com.era.www.movietracker.utilities.NetworkUtils;
@@ -139,18 +140,11 @@ public class BoxOfficeFragment extends Fragment implements BoxOfficeAdapterOnCli
      */
     @Override
     public void onClick(String boxOfficeMovie) {
-
-//        if (mToast != null) {
-//            mToast.cancel();
-//        }
-//
-//        mToast = Toast.makeText(getActivity(), boxOfficeMovie, Toast.LENGTH_LONG);
-//
-//        mToast.show();
-
         //lunch detail activity when recycler view item clicked
 
         Intent lunchDetailActivity = new Intent(getActivity(), DetailActivity.class);
+
+        lunchDetailActivity.putExtra(Intent.EXTRA_TEXT, boxOfficeMovie);
 
         startActivity(lunchDetailActivity);
 

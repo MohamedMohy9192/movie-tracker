@@ -1,12 +1,12 @@
-package com.era.www.movietracker;
+package com.era.www.movietracker.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.era.www.movietracker.R;
 import com.era.www.movietracker.model.BoxOfficeMovie;
 
 import java.text.DecimalFormat;
@@ -89,6 +89,7 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
         DecimalFormat numberFormat = new DecimalFormat("$##.##M");
         String formRevenue = numberFormat.format(v);
         holder.mMovieRevenueTextView.setText(formRevenue);
+        boxOfficeMovie.setFormattedNumber(formRevenue);
 
         String movieRank = Byte.toString(boxOfficeMovie.getRank());
         holder.mMovieRankTextView.setText(movieRank);
@@ -157,7 +158,7 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
 
             BoxOfficeMovie boxOfficeMovie = mBoxOfficeList.get(indexPosition);
 
-            String movie = boxOfficeMovie.getName() + " - " + boxOfficeMovie.getRevenue();
+            String movie = boxOfficeMovie.getName() + " - " + boxOfficeMovie.getFormattedNumber();
 
             mClickHandler.onClick(movie);
         }

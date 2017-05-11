@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.era.www.movietracker.movies.MoviesFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "tag";

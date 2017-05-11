@@ -27,5 +27,6 @@
 
     <string name="error_message">Failed to get results. Please try again.</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="action_Share">Share</string>
 
 </resources>

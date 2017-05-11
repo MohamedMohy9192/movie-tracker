@@ -1,15 +1,22 @@
 package com.era.www.movietracker.detail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.era.www.movietracker.R;
 
 public class DetailActivity extends AppCompatActivity {
+
+    private TextView mMovieDetailTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +34,46 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mMovieDetailTextView = (TextView) findViewById(R.id.tv_movie_detail);
+
+        Intent intent = getIntent();
+
+        if (intent != null) {
+
+            if (intent.hasExtra(Intent.EXTRA_TEXT)) {
+                String movieDetailInfo = intent.getStringExtra(Intent.EXTRA_TEXT);
+                mMovieDetailTextView.setText(movieDetailInfo);
+            }
+        }
     }
 
+    private void createShareIntent() {
+        Intent shareIntent = ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setText(mMovieDetailTextView.getText())
+                .getIntent();
+
+        if (shareIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(shareIntent);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int menuId = item.getItemId();
+
+        if (menuId == R.id.action_share) {
+            createShareIntent();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

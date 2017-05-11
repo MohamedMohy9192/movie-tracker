@@ -12,6 +12,8 @@ public class BoxOfficeMovie {
 
     private byte rank;
 
+    private String formattedNumber;
+
     public BoxOfficeMovie(String name, int revenue, byte rank) {
         this.name = name;
         this.revenue = revenue;
@@ -40,5 +42,13 @@ public class BoxOfficeMovie {
 
     public void setRank(byte rank) {
         this.rank = rank;
+    }
+
+    public String getFormattedNumber() {
+        return formattedNumber;
+    }
+
+    public void setFormattedNumber(String formattedNumber) {
+        this.formattedNumber = formattedNumber;
     }
 }
