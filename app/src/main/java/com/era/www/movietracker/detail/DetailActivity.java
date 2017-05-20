@@ -52,7 +52,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent shareIntent = ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
                 .setText(mMovieDetailTextView.getText())
-                .getIntent();
+                .createChooserIntent();
 
         if (shareIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(shareIntent);
