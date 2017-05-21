@@ -4,10 +4,17 @@
     android:layout_height="match_parent"
     tools:context="com.era.www.movietracker.movies.BoxOfficeFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_box_office"
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:id="@+id/swipe_refresh_layout">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_box_office"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/pb_loading_indicator"
