@@ -30,6 +30,8 @@
                 android:paddingLeft="120dp"
                 android:paddingRight="16dp"
                 android:paddingTop="16dp"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 tools:text="Ghost in the Shell" />
 

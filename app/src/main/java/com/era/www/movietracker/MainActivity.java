@@ -170,16 +170,18 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
+        }else {
+
+            super.onBackPressed();
         }
 
-        if (navItemIndex != 0) {
-            navItemIndex = 0;
-            CURRENT_TAG = TAG_MOVIES;
-            loadHomeFragment();
-            return;
-        }
+//        if (navItemIndex != 0) {
+//            navItemIndex = 0;
+//            CURRENT_TAG = TAG_MOVIES;
+//            loadHomeFragment();
+//            return;
+//        }
 
-        super.onBackPressed();
 
     }
 

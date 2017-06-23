@@ -30,6 +30,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.era.www.movietracker.MainActivity" />
         </activity>
+        <activity android:name=".settings.SettingsActivity"></activity>
     </application>
 
 </manifest>
