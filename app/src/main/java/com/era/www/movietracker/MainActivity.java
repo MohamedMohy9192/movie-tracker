@@ -1,5 +1,6 @@
 package com.era.www.movietracker;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.era.www.movietracker.movies.MoviesFragment;
+import com.era.www.movietracker.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -109,6 +111,13 @@ public class MainActivity extends AppCompatActivity {
                                 navItemIndex = 2;
                                 CURRENT_TAG = TAG_PEOPLE_FRAGMENT;
                                 break;
+                            case R.id.nav_settings:
+                                Intent openSettingsActivity = new Intent(
+                                        MainActivity.this,
+                                        SettingsActivity.class);
+                                startActivity(openSettingsActivity);
+                                drawerLayout.closeDrawers();
+                                return true;
                             default:
                                 navItemIndex = 0;
                                 CURRENT_TAG = TAG_MOVIES;
@@ -170,18 +179,16 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawers();
-        }else {
-
-            super.onBackPressed();
         }
 
-//        if (navItemIndex != 0) {
-//            navItemIndex = 0;
-//            CURRENT_TAG = TAG_MOVIES;
-//            loadHomeFragment();
-//            return;
-//        }
+        if (navItemIndex != 0) {
+            navItemIndex = 0;
+            CURRENT_TAG = TAG_MOVIES;
+            loadHomeFragment();
+            return;
+        }
 
+        super.onBackPressed();
 
     }
 

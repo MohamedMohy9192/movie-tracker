@@ -31,9 +31,8 @@
 
     <item android:title="Other">
         <menu>
-            <group>
-
-            </group>
+            <item android:id="@+id/nav_settings"
+                android:title="@string/settings_activity_lable"/>
         </menu>
     </item>
 
