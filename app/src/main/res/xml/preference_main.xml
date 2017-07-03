@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><!--The root for the Preference XML file must be a <PreferenceScreen> element.
+Within this element is where we add each Preference-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Each child you add within the <PreferenceScreen> element appears as a single item
+    in the list of settings.-->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/pref_show_revenue_key"
+        android:summaryOff="@string/pref_show_revenue_summary_off"
+        android:summaryOn="@string/pref_show_revenue_summary_on"
+        android:title="@string/pref_show_revenue_title" />
+    <!--android:entries="Array with all the option labels"-->
+    <!--android:entryValues="Array with all the values"-->
+    <!--the entries are the labels that you will actually see-->
+    <!--entryValues are the values that are actually stored in shared
+    preferences file when you select on of the options-->
+    <ListPreference
+        android:defaultValue="@string/pref_color_black_value"
+        android:entries="@array/pref_text_color_labels"
+        android:entryValues="@array/pref_text_color_values"
+        android:key="@string/pref_rank_text_color_key"
+        android:title="@string/pref_rank_text_color_lable" />
+</PreferenceScreen>

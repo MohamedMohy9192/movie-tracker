@@ -21,6 +21,8 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     private final static String LOG_TAG = BoxOfficeAdapter.class.getSimpleName();
 
     private List<BoxOfficeMovie> mBoxOfficeList;
+    //boolean variable for show revenue check box preference.
+    private boolean mShowRevenue;
 
     /**
      * An on-click handler that we've defined to make it easy for BoxOfficeFragment to interface with
@@ -90,7 +92,13 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
         String formRevenue = numberFormat.format(v);
         holder.mMovieRevenueTextView.setText(formRevenue);
         boxOfficeMovie.setFormattedNumber(formRevenue);
-
+        // check if the mShowRevenue true or false, if true set revenue text view visible
+        // if false set revenue text view to invisible.
+        if (mShowRevenue) {
+            holder.mMovieRevenueTextView.setVisibility(View.VISIBLE);
+        } else {
+            holder.mMovieRevenueTextView.setVisibility(View.GONE);
+        }
         String movieRank = Byte.toString(boxOfficeMovie.getRank());
         holder.mMovieRankTextView.setText(movieRank);
     }
@@ -121,6 +129,10 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
         notifyDataSetChanged();
     }
 
+    // setter method to control the show revenue boolean variable.
+    public void setShowRevenue(boolean showRevenue) {
+        this.mShowRevenue = showRevenue;
+    }
 
     /**
      * Cache of the children views for a BoxOffice list item.

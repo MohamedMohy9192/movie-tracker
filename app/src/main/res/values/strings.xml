@@ -5,6 +5,27 @@
     <!--strings for SettingActivity-->
     <string name="settings_activity_lable">Settings</string>
 
+    <!--strings for CheckBoxPreference show_revenue-->
+    <string name="pref_show_revenue_key" translatable="false">show_revenue</string>
+    <string name="pref_show_revenue_title">Show Revenue</string>
+    <string name="pref_show_revenue_summary_on">Shown</string>
+    <string name="pref_show_revenue_summary_off">Hidden</string>
+
+    <!--strings for ListPreference rank_text_color-->
+    <!--lable for entire preference-->
+    <string name="pref_rank_text_color_lable">Rank Text Color</string>
+    <!--the labels for each of the values-->
+    <string name="pref_text_color_lable_black">Black</string>
+    <string name="pref_text_color_lable_red">Red</string>
+    <string name="pref_text_color_lable_green">Green</string>
+    <!--key for rank_text_color preference-->
+    <string name="pref_rank_text_color_key" translatable="false">rank_text_color</string>
+    <!--values for text_rank_color preference-->
+    <string name="pref_color_black_value" translatable="false">black</string>
+    <string name="pref_color_red_value" translatable="false">red</string>
+    <string name="pref_color_green_value" translatable="false">green</string>
+
+
     <!-- Navigation Drawer menu labels -->
     <string name="nav_movies">Home</string>
     <string name="nav_movie">Movies</string>
