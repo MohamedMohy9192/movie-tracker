@@ -1,5 +1,8 @@
 package com.era.www.movietracker.adapters;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +26,8 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     private List<BoxOfficeMovie> mBoxOfficeList;
     //boolean variable for show revenue check box preference.
     private boolean mShowRevenue;
+    // integer variable to set the color on rank text view based on list preference value.
+    private int mRankTextColor;
 
     /**
      * An on-click handler that we've defined to make it easy for BoxOfficeFragment to interface with
@@ -101,6 +106,10 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
         }
         String movieRank = Byte.toString(boxOfficeMovie.getRank());
         holder.mMovieRankTextView.setText(movieRank);
+        //set the rank text view text color depend on the color id recourse returned from setRankTextColor.
+        holder.mMovieRankTextView.setTextColor(mRankTextColor);
+
+
     }
 
     /**
@@ -129,9 +138,28 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
         notifyDataSetChanged();
     }
 
-    // setter method to control the show revenue boolean variable.
+    /**
+     * setter method to control the show revenue boolean variable.
+     */
     public void setShowRevenue(boolean showRevenue) {
         this.mShowRevenue = showRevenue;
+    }
+
+    /**
+     *
+     * @param context the context of the caller activity or fragment.
+     * @param s the color string value which pass in form the caller activity.
+     * @return the color id recourse returns depend on the the color string value.
+     */
+    public int setRankTextColor(Context context, String s) {
+        if (s.equals(context.getString(R.string.pref_color_black_value))) {
+            return mRankTextColor = ContextCompat.getColor(context, R.color.rank_text_color_black);
+        } else if (s.equals(context.getString(R.string.pref_color_red_value))) {
+            return mRankTextColor = ContextCompat.getColor(context, R.color.rank_text_color_red);
+        } else if (s.equals(context.getString(R.string.pref_color_green_value))) {
+            return mRankTextColor = ContextCompat.getColor(context, R.color.rank_text_color_green);
+        }
+        return mRankTextColor;
     }
 
     /**

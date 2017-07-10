@@ -309,6 +309,11 @@ public class BoxOfficeFragment extends Fragment implements
         // set the visibility of the revenue text view to true or false
         // depend on show_revenue check box user preference.
         mBoxOfficeAdapter.setShowRevenue(showRevenuePref);
+        //set the rank text view text color depend on the string value return form list preference
+        //pref_rank_text_color.
+        String rankTextColorValue = sharedPreferences.getString(getString(R.string.pref_rank_text_color_key),
+                getString(R.string.pref_color_black_value));
+        mBoxOfficeAdapter.setRankTextColor(getActivity(), rankTextColorValue);
         // Registers the listener callback to be invoked when a change happens to a preference.
         // Registers the listener in onCreate when the fragment's is created
         // BoxOfficeFragment implement SharedPreferences.OnSharedPreferenceChangeListener
@@ -330,6 +335,9 @@ public class BoxOfficeFragment extends Fragment implements
             boolean showRevenue = sharedPreferences.getBoolean(key,
                     getResources().getBoolean(R.bool.pref_show_revenue_default));
             mBoxOfficeAdapter.setShowRevenue(showRevenue);
+        }else if (key.equals(getString(R.string.pref_rank_text_color_key))){
+            String s = sharedPreferences.getString(key, getString(R.string.pref_color_black_value));
+            mBoxOfficeAdapter.setRankTextColor(getActivity(), s);
         }
     }
 }
