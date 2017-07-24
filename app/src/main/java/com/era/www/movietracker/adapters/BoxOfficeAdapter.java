@@ -28,6 +28,8 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     private boolean mShowRevenue;
     // integer variable to set the color on rank text view based on list preference value.
     private int mRankTextColor;
+    // float variable to set the revenue text size based on edit text preference value.
+    private float mRevenueTextSize;
 
     /**
      * An on-click handler that we've defined to make it easy for BoxOfficeFragment to interface with
@@ -104,6 +106,10 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
         } else {
             holder.mMovieRevenueTextView.setVisibility(View.GONE);
         }
+        //set the revenue text size from user choice from revenue_text_size edit text preference
+        // which passe the size from BoxOfficeFragment throw setRevenueTextSize method.
+        holder.mMovieRevenueTextView.setTextSize(mRevenueTextSize);
+
         String movieRank = Byte.toString(boxOfficeMovie.getRank());
         holder.mMovieRankTextView.setText(movieRank);
         //set the rank text view text color depend on the color id recourse returned from setRankTextColor.
@@ -146,9 +152,8 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     }
 
     /**
-     *
      * @param context the context of the caller activity or fragment.
-     * @param s the color string value which pass in form the caller activity.
+     * @param s       the color string value which pass in form the caller activity.
      * @return the color id recourse returns depend on the the color string value.
      */
     public int setRankTextColor(Context context, String s) {
@@ -160,6 +165,12 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
             return mRankTextColor = ContextCompat.getColor(context, R.color.rank_text_color_green);
         }
         return mRankTextColor;
+    }
+
+    // setter method to set the revenue text size from the BoxOfficeFragment
+    // depend on revenue_text_size edit text preference.
+    public void setRevenueTextSize(float revenueTextSize) {
+        this.mRevenueTextSize = revenueTextSize;
     }
 
     /**

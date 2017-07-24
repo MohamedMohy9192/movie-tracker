@@ -25,6 +25,11 @@
     <string name="pref_color_red_value" translatable="false">red</string>
     <string name="pref_color_green_value" translatable="false">green</string>
 
+    <!--strings for EditTextPreference revenue_text_size-->
+    <string name="pref_revenue_text_size_label">Revenue Text Size</string>
+    <string name="pref_revenue_text_size_key" translatable="false">revenue_text_size</string>
+    <string name="pref_revenue_text_size_default_value" translatable="false">18</string>
+
 
     <!-- Navigation Drawer menu labels -->
     <string name="nav_movies">Home</string>

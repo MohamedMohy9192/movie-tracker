@@ -20,4 +20,10 @@ Within this element is where we add each Preference-->
         android:entryValues="@array/pref_text_color_values"
         android:key="@string/pref_rank_text_color_key"
         android:title="@string/pref_rank_text_color_lable" />
+
+    <EditTextPreference
+        android:defaultValue="@string/pref_revenue_text_size_default_value"
+        android:inputType="number"
+        android:key="@string/pref_revenue_text_size_key"
+        android:title="@string/pref_revenue_text_size_label" />
 </PreferenceScreen>

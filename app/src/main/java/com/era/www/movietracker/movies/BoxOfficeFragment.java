@@ -4,6 +4,7 @@ package com.era.www.movietracker.movies;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -124,9 +125,20 @@ public class BoxOfficeFragment extends Fragment implements
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Registers the listener callback to be invoked when a change happens to a preference.
+        // Registers the listener in onCreate when the fragment's is created
+        // BoxOfficeFragment implement SharedPreferences.OnSharedPreferenceChangeListener
+        // which i can pass this.
+        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
+
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        // Unregisters a previous listener callback.
+        // Unregisters OnPreferenceChangedListener callback to avoid any memory leaks.
         PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .unregisterOnSharedPreferenceChangeListener(this);
 
@@ -314,11 +326,14 @@ public class BoxOfficeFragment extends Fragment implements
         String rankTextColorValue = sharedPreferences.getString(getString(R.string.pref_rank_text_color_key),
                 getString(R.string.pref_color_black_value));
         mBoxOfficeAdapter.setRankTextColor(getActivity(), rankTextColorValue);
-        // Registers the listener callback to be invoked when a change happens to a preference.
-        // Registers the listener in onCreate when the fragment's is created
-        // BoxOfficeFragment implement SharedPreferences.OnSharedPreferenceChangeListener
-        // which i can pass this.
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        //get the revenue_text_size edit text preference value and convert it to float
+        // to set the revenue text size to what user choice.
+        float revenueTextSize = Float.parseFloat(sharedPreferences.getString(
+                getString(R.string.pref_revenue_text_size_key),
+                getString(R.string.pref_revenue_text_size_default_value)));
+        mBoxOfficeAdapter.setRevenueTextSize(revenueTextSize);
+
 
     }
 
@@ -335,9 +350,14 @@ public class BoxOfficeFragment extends Fragment implements
             boolean showRevenue = sharedPreferences.getBoolean(key,
                     getResources().getBoolean(R.bool.pref_show_revenue_default));
             mBoxOfficeAdapter.setShowRevenue(showRevenue);
-        }else if (key.equals(getString(R.string.pref_rank_text_color_key))){
+        } else if (key.equals(getString(R.string.pref_rank_text_color_key))) {
             String s = sharedPreferences.getString(key, getString(R.string.pref_color_black_value));
             mBoxOfficeAdapter.setRankTextColor(getActivity(), s);
+        } else if (key.equals(getString(R.string.pref_revenue_text_size_key))) {
+            float revenueTextSize = Float.parseFloat(sharedPreferences.getString(
+                    key,
+                    getString(R.string.pref_revenue_text_size_default_value)));
+            mBoxOfficeAdapter.setRevenueTextSize(revenueTextSize);
         }
     }
 }
