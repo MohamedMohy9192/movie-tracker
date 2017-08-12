@@ -59,16 +59,29 @@ public class BoxOfficeFragment extends Fragment implements
         // Required empty public constructor
     }
 
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        /*
+//         * Ensures a loader is initialized and active. If the loader doesn't already exist,
+//         * created and (if fragment is currently started) starts the loader. Otherwise
+//         * the last created loader is re-used.
+//         */
+//        loadBoxOfficeData();
+//
+//    }
+
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         /*
          * Ensures a loader is initialized and active. If the loader doesn't already exist,
-         * created and (if fragment is currently started) starts the loader. Otherwise
+         * created and starts the loader. Otherwise
          * the last created loader is re-used.
+         * You typically initialize a Loader within the activity's onCreate() method,
+         * or within the fragment's onActivityCreated() method.
          */
         loadBoxOfficeData();
-
     }
 
     @Override
@@ -235,6 +248,10 @@ public class BoxOfficeFragment extends Fragment implements
      */
     @Override
     public void onLoaderReset(Loader<List<BoxOfficeMovie>> loader) {
+        // Of course, unless you use destroyLoader(),
+        // this is called when everything is already dying
+        // so a completely empty onLoaderReset() is
+        // totally acceptable
 
     }
 
