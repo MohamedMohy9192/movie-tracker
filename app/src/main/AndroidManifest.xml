@@ -43,6 +43,14 @@
                 android:value=".MainActivity" />
 
         </activity>
+        <!--android:authorities Symbolic names that identify the entire provider within the system,
+         it's typically just the package name of the app the a provider belongs to -->
+        <!--android:name The class that implements ContentProvider. -->
+        <!--android:exported: Flag allowing other applications to use this provider.-->
+        <provider
+            android:name=".data.MoviesContentProvider"
+            android:authorities="com.era.www.movietracker"
+            android:exported="false" />
     </application>
 
 </manifest>
