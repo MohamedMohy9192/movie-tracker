@@ -6,14 +6,25 @@ import android.provider.BaseColumns;
 
 public final class MoviesContract {
 
-    // The authority, which is how your code knows which Content Provider to access
+    /*
+     * The "Content authority" is a name for the entire content provider, similar to the
+     * relationship between a domain name and its website. A convenient string to use for the
+     * content authority is the package name for the app, which is guaranteed to be unique on the
+     * Play Store.
+     */
     public static final String CONTENT_AUTHORITY = "com.era.www.movietracker";
 
-    // The base content URI = "content://" + <authority>
+    /*
+     * Use CONTENT_AUTHORITY to create the base of all URI's which the app will use to contact
+     * the content provider for MovieTracker.
+     */
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    // Define the possible paths for accessing data in this contract,
-    // This is the path for the "box_office" directory]
+    /**
+     * possible paths for accessing data that can be appended to BASE_CONTENT_URI
+     * to form valid URI's that MovieTracker can handle
+     * This is the path for the "box_office" table.
+     */
     public static final String PATH_BOX_OFFICE = "box_office";
 
     /**
@@ -32,8 +43,7 @@ public final class MoviesContract {
     public static final class BoxOfficeEntry implements BaseColumns {
 
         /**
-         * The content URI to access the box_office data in the provider
-         * BoxOfficeEntry content URI = base content URI + path
+         * The CONTENT_URI used to query the box_office table from the content provider.
          */
         public static final Uri CONTENT_URI =
                 Uri.withAppendedPath(BASE_CONTENT_URI, PATH_BOX_OFFICE);

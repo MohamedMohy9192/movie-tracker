@@ -51,7 +51,7 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
      */
     public BoxOfficeAdapter(BoxOfficeAdapterOnClickHandler clickHandler) {
 
-        mClickHandler = clickHandler;
+        this.mClickHandler = clickHandler;
     }
 
     /**

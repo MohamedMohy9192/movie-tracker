@@ -42,7 +42,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_BOX_OFFICE_ENTRY = "CREATE TABLE " +
                 BoxOfficeEntry.TABLE_NAME + " (" +
-                BoxOfficeEntry._ID + " INTEGER PRIMARY KEY AUTO INCREMENT, " +
+                BoxOfficeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 BoxOfficeEntry.COLUMN_MOVIE_NAME + " TEXT NOT NULL, " +
                 BoxOfficeEntry.COLUMN_MOVIE_REVENUE + " REAL NOT NULL, " +
                 BoxOfficeEntry.COLUMN_MOVIE_RANK + " INTEGER NOT NULL" + ");";
@@ -68,8 +68,17 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
         // In a production app, this method might be modified to ALTER the table
         // instead of dropping it, so that existing data is not deleted.
         final String SQL_DELETE_BOX_OFFICE_ENTRY =
-                "DROP TABLE IF EXISTS" + BoxOfficeEntry.TABLE_NAME;
+                "DROP TABLE IF EXISTS " + BoxOfficeEntry.TABLE_NAME;
         db.execSQL(SQL_DELETE_BOX_OFFICE_ENTRY);
         onCreate(db);
     }
 }
+
+                /* this will replace an old record with a new record if the date is the same but
+                 * the remaining columns are different.
+                 * To ensure this table can only contain one weather entry per date, we declare
+                 * the date column to be unique. We also specify "ON CONFLICT REPLACE". This tells
+                 * SQLite that if we have a weather entry for a certain date and we attempt to
+                 * insert another weather entry with that date, we replace the old weather entry.
+                 *  " UNIQUE (" + WeatherEntry.COLUMN_DATE + ") ON CONFLICT REPLACE);";
+                 */
