@@ -52,8 +52,11 @@ public final class MoviesContract {
 
         //We didn't need to create a constant string for the id because that's what the BaseColumns
         //interface already does for us.
-        public static final String COLUMN_MOVIE_NAME = "name";
+
         public static final String COLUMN_MOVIE_REVENUE = "revenue";
+        public static final String COLUMN_MOVIE_TITLE = "title";
+        public static final String COLUMN_MOVIE_YEAR = "year";
+        public static final String COLUMN_TRAKT_ID = "trakt_id";
         public static final String COLUMN_MOVIE_RANK = "rank";
 
 
