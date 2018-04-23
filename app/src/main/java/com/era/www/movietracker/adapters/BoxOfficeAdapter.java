@@ -1,8 +1,5 @@
 package com.era.www.movietracker.adapters;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.era.www.movietracker.R;
-import com.era.www.movietracker.model.BoxOfficeMovie;
+import com.era.www.movietracker.model.Movie;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -23,13 +20,7 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
 
     private final static String LOG_TAG = BoxOfficeAdapter.class.getSimpleName();
 
-    private List<BoxOfficeMovie> mBoxOfficeList;
-    //boolean variable for show revenue check box preference.
-    private boolean mShowRevenue;
-    // integer variable to set the color on rank text view based on list preference value.
-    private int mRankTextColor;
-    // float variable to set the revenue text size based on edit text preference value.
-    private float mRevenueTextSize;
+    private List<Movie> mBoxOfficeList;
 
     /**
      * An on-click handler that we've defined to make it easy for BoxOfficeFragment to interface with
@@ -89,9 +80,9 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     @Override
     public void onBindViewHolder(BoxOfficeAdapterViewHolder holder, int position) {
 
-        BoxOfficeMovie boxOfficeMovie = mBoxOfficeList.get(position);
+        Movie boxOfficeMovie = mBoxOfficeList.get(position);
 
-        holder.mMovieTitleTextView.setText(boxOfficeMovie.getName());
+        holder.mMovieTitleTextView.setText(boxOfficeMovie.getTitle());
 
         int movieRevenue = boxOfficeMovie.getRevenue();
         double v = movieRevenue / 1000000.0;
@@ -99,23 +90,9 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
         String formRevenue = numberFormat.format(v);
         holder.mMovieRevenueTextView.setText(formRevenue);
         boxOfficeMovie.setFormattedNumber(formRevenue);
-        // check if the mShowRevenue true or false, if true set revenue text view visible
-        // if false set revenue text view to invisible.
-        if (mShowRevenue) {
-            holder.mMovieRevenueTextView.setVisibility(View.VISIBLE);
-        } else {
-            holder.mMovieRevenueTextView.setVisibility(View.GONE);
-        }
-        //set the revenue text size from user choice from revenue_text_size edit text preference
-        // which passe the size from BoxOfficeFragment throw setRevenueTextSize method.
-        holder.mMovieRevenueTextView.setTextSize(mRevenueTextSize);
 
-        String movieRank = Byte.toString(boxOfficeMovie.getRank());
+        String movieRank = Integer.toString(boxOfficeMovie.getRank());
         holder.mMovieRankTextView.setText(movieRank);
-        //set the rank text view text color depend on the color id recourse returned from setRankTextColor.
-        holder.mMovieRankTextView.setTextColor(mRankTextColor);
-
-
     }
 
     /**
@@ -139,38 +116,9 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
      *
      * @param boxOfficeList The new Box Office  List to be displayed.
      */
-    public void setBoxOfficeData(List<BoxOfficeMovie> boxOfficeList) {
+    public void setBoxOfficeData(List<Movie> boxOfficeList) {
         this.mBoxOfficeList = boxOfficeList;
         notifyDataSetChanged();
-    }
-
-    /**
-     * setter method to control the show revenue boolean variable.
-     */
-    public void setShowRevenue(boolean showRevenue) {
-        this.mShowRevenue = showRevenue;
-    }
-
-    /**
-     * @param context the context of the caller activity or fragment.
-     * @param s       the color string value which pass in form the caller activity.
-     * @return the color id recourse returns depend on the the color string value.
-     */
-    public int setRankTextColor(Context context, String s) {
-        if (s.equals(context.getString(R.string.pref_color_black_value))) {
-            return mRankTextColor = ContextCompat.getColor(context, R.color.rank_text_color_black);
-        } else if (s.equals(context.getString(R.string.pref_color_red_value))) {
-            return mRankTextColor = ContextCompat.getColor(context, R.color.rank_text_color_red);
-        } else if (s.equals(context.getString(R.string.pref_color_green_value))) {
-            return mRankTextColor = ContextCompat.getColor(context, R.color.rank_text_color_green);
-        }
-        return mRankTextColor;
-    }
-
-    // setter method to set the revenue text size from the BoxOfficeFragment
-    // depend on revenue_text_size edit text preference.
-    public void setRevenueTextSize(float revenueTextSize) {
-        this.mRevenueTextSize = revenueTextSize;
     }
 
     /**
@@ -207,9 +155,9 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
 
             int indexPosition = getAdapterPosition();
 
-            BoxOfficeMovie boxOfficeMovie = mBoxOfficeList.get(indexPosition);
+            Movie boxOfficeMovie = mBoxOfficeList.get(indexPosition);
 
-            String movie = boxOfficeMovie.getName() + " - " + boxOfficeMovie.getFormattedNumber();
+            String movie = boxOfficeMovie.getTitle() + " - " + boxOfficeMovie.getFormattedNumber();
 
             mClickHandler.onClick(movie);
         }
