@@ -1,5 +1,6 @@
 package com.era.www.movietracker.adapters;
 
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.era.www.movietracker.R;
-import com.era.www.movietracker.model.Movie;
+import com.era.www.movietracker.data.MoviesContract.BoxOfficeEntry;
+import com.era.www.movietracker.movies.BoxOfficeFragment;
+import com.era.www.movietracker.utilities.FormatUtils;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 /**
  * {@link BoxOfficeAdapter} exposes a list of box office data to a
@@ -20,7 +22,7 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
 
     private final static String LOG_TAG = BoxOfficeAdapter.class.getSimpleName();
 
-    private List<Movie> mBoxOfficeList;
+    private Cursor mCursor;
 
     /**
      * An on-click handler that we've defined to make it easy for BoxOfficeFragment to interface with
@@ -33,7 +35,7 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
      */
     public interface BoxOfficeAdapterOnClickHandler {
 
-        void onClick(String boxOfficeMovie);
+        void onClick(int movieTraktId);
     }
 
     /**
@@ -80,19 +82,16 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     @Override
     public void onBindViewHolder(BoxOfficeAdapterViewHolder holder, int position) {
 
-        Movie boxOfficeMovie = mBoxOfficeList.get(position);
+        mCursor.moveToPosition(position);
 
-        holder.mMovieTitleTextView.setText(boxOfficeMovie.getTitle());
+        holder.mMovieRevenueTextView.setText(
+                FormatUtils.formatMovieRevenue(mCursor.getInt(BoxOfficeFragment.INDEX_MOVIE_REVENUE)));
 
-        int movieRevenue = boxOfficeMovie.getRevenue();
-        double v = movieRevenue / 1000000.0;
-        DecimalFormat numberFormat = new DecimalFormat("$##.##M");
-        String formRevenue = numberFormat.format(v);
-        holder.mMovieRevenueTextView.setText(formRevenue);
-        boxOfficeMovie.setFormattedNumber(formRevenue);
+        holder.mMovieTitleTextView.setText(
+                mCursor.getString(BoxOfficeFragment.INDEX_MOVIE_TITLE));
 
-        String movieRank = Integer.toString(boxOfficeMovie.getRank());
-        holder.mMovieRankTextView.setText(movieRank);
+        holder.mMovieRankTextView.setText(
+                String.valueOf(mCursor.getInt(BoxOfficeFragment.INDEX_MOVIE_RANK)));
     }
 
     /**
@@ -104,20 +103,14 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
     @Override
     public int getItemCount() {
 
-        if (mBoxOfficeList == null) return 0;
+        if (mCursor == null) return 0;
 
-        return mBoxOfficeList.size();
+        return mCursor.getCount();
     }
 
-    /**
-     * This method is used to set the box office data on a BoxOfficeAdapter if we've already
-     * created one. This is handy when we get new data from the web but don't want to create a
-     * new BoxOfficeAdapter to display it.
-     *
-     * @param boxOfficeList The new Box Office  List to be displayed.
-     */
-    public void setBoxOfficeData(List<Movie> boxOfficeList) {
-        this.mBoxOfficeList = boxOfficeList;
+    public void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        // After the new Cursor is set, call notifyDataSetChanged
         notifyDataSetChanged();
     }
 
@@ -152,14 +145,9 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
 
         @Override
         public void onClick(View v) {
-
             int indexPosition = getAdapterPosition();
-
-            Movie boxOfficeMovie = mBoxOfficeList.get(indexPosition);
-
-            String movie = boxOfficeMovie.getTitle() + " - " + boxOfficeMovie.getFormattedNumber();
-
-            mClickHandler.onClick(movie);
+            mCursor.moveToPosition(indexPosition);
+            mClickHandler.onClick(mCursor.getInt(BoxOfficeFragment.INDEX_MOVIE_TRAKT_ID));
         }
     }
 }
