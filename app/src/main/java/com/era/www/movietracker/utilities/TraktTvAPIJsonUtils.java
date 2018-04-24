@@ -21,6 +21,12 @@ public class TraktTvAPIJsonUtils {
     public static final String MOVIE_REVENUE_KEY = "revenue";
     public static final String MOVIE_TITLE_KEY = "title";
     public static final String MOVIE_YEAR_KEY = "year";
+    public static final String MOVIE_OVERVIEW_KEY = "overview";
+    public static final String MOVIE_RELEASED_KEY = "released";
+    public static final String MOVIE_TRAILER_KEY = "trailer";
+    public static final String MOVIE_HOMEPAGE_KEY = "homepage";
+    public static final String MOVIE_RATE_KEY = "rate";
+    public static final String MOVIE_CERTIFICATION_KEY = "certification";
 
     public static final String MOVIE_IDS_KEY = "ids";
     public static final String TRAKT_ID_KEY = "trakt";
@@ -37,6 +43,12 @@ public class TraktTvAPIJsonUtils {
         int movieYear = 0;
         int movieTraktId = 0;
         int movieRank = 1;
+        String overview = null;
+        String released = null;
+        String trailer = null;
+        String homePage = null;
+        int rate = 0;
+        String certification = null;
 
         try {
             JSONArray boxOfficeMoviesArray = new JSONArray(boxOfficeJsonStr);
@@ -69,8 +81,37 @@ public class TraktTvAPIJsonUtils {
                         }
                     }
                 }
-                Movie boxOfficeMovie =
-                        new Movie(movieRevenue, movieTitle, movieYear, movieRank, movieTraktId);
+                if (mainMovieObject.has(MOVIE_OVERVIEW_KEY)) {
+                    overview = mainMovieObject.optString(MOVIE_OVERVIEW_KEY);
+                }
+                if (mainMovieObject.has(MOVIE_RELEASED_KEY)) {
+                    released = mainMovieObject.optString(MOVIE_RELEASED_KEY);
+                }
+                if (mainMovieObject.has(MOVIE_TRAILER_KEY)) {
+                    trailer = mainMovieObject.optString(MOVIE_TRAILER_KEY);
+                }
+                if (mainMovieObject.has(MOVIE_HOMEPAGE_KEY)) {
+                    homePage = mainMovieObject.optString(MOVIE_HOMEPAGE_KEY);
+                }
+                if (mainMovieObject.has(MOVIE_RATE_KEY)) {
+                    rate = mainMovieObject.optInt(MOVIE_RATE_KEY);
+                }
+                if (mainMovieObject.has(MOVIE_CERTIFICATION_KEY)) {
+                    certification = mainMovieObject.optString(MOVIE_CERTIFICATION_KEY);
+                }
+
+                Movie boxOfficeMovie = new Movie(
+                        movieRevenue,
+                        movieTitle,
+                        movieYear,
+                        movieRank,
+                        movieTraktId,
+                        overview,
+                        released,
+                        trailer,
+                        homePage,
+                        rate,
+                        certification);
                 boxOfficeMovieList.add(boxOfficeMovie);
             }
             return boxOfficeMovieList;
@@ -99,8 +140,14 @@ public class TraktTvAPIJsonUtils {
             movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_REVENUE, movie.getRevenue());
             movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_TITLE, movie.getTitle());
             movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_YEAR, movie.getYear());
-            movieContentValues.put(BoxOfficeEntry.COLUMN_TRAKT_ID, movie.getMovieTraktId());
+            movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_TRAKT_ID, movie.getMovieTraktId());
             movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_RANK, movie.getRank());
+            movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_OVERVIEW, movie.getOverview());
+            movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_RELEASED, movie.getReleased());
+            movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_TRAILER, movie.getTrailer());
+            movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_HOMEPAGE, movie.getHomePage());
+            movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_RATE, movie.getRate());
+            movieContentValues.put(BoxOfficeEntry.COLUMN_MOVIE_CERTIFICATION, movie.getCertification());
 
             contentValuesArray[i] = movieContentValues;
         }
