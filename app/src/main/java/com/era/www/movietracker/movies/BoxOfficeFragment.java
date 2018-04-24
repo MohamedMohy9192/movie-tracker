@@ -1,13 +1,16 @@
 package com.era.www.movietracker.movies;
 
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.preference.PreferenceManager;
@@ -17,18 +20,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.era.www.movietracker.R;
 import com.era.www.movietracker.adapters.BoxOfficeAdapter;
 import com.era.www.movietracker.adapters.BoxOfficeAdapter.BoxOfficeAdapterOnClickHandler;
+import com.era.www.movietracker.data.MoviesContract.BoxOfficeEntry;
 import com.era.www.movietracker.detail.DetailActivity;
-import com.era.www.movietracker.model.BoxOfficeMovie;
-import com.era.www.movietracker.utilities.NetworkUtils;
-import com.era.www.movietracker.utilities.TraktTvAPIJsonUtils;
-
-import java.net.URL;
-import java.util.List;
 
 /**
  * SharedPreferences.OnSharedPreferenceChangeListener: Interface definition for a callback to be
@@ -36,10 +33,28 @@ import java.util.List;
  */
 public class BoxOfficeFragment extends Fragment implements
         BoxOfficeAdapterOnClickHandler,
-        LoaderManager.LoaderCallbacks<List<BoxOfficeMovie>>,
+        LoaderManager.LoaderCallbacks<Cursor>,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     private final static String LOG_TAG = BoxOfficeFragment.class.getSimpleName();
+
+    //The columns of data that we are interested in displaying within our BoxOfficeFragment's list of
+    //box office data.
+    private static final String[] MAIN_BOX_OFFICE_PROJECTION = {
+            BoxOfficeEntry.COLUMN_MOVIE_REVENUE,
+            BoxOfficeEntry.COLUMN_MOVIE_TITLE,
+            BoxOfficeEntry.COLUMN_MOVIE_RANK,
+            BoxOfficeEntry.COLUMN_MOVIE_TRAKT_ID};
+
+    /*
+     * We store the indices of the values in the array of Strings above to more quickly be able to
+     * access the data from our query. If the order of the Strings above changes, these indices
+     * must be adjusted to match the order of the Strings.
+     */
+    public static final int INDEX_MOVIE_REVENUE = 0;
+    public static final int INDEX_MOVIE_TITLE = 1;
+    public static final int INDEX_MOVIE_RANK = 2;
+    public static final int INDEX_MOVIE_TRAKT_ID = 3;
 
     private static final String TRAKT_API_BOX_OFFICE_URL = "https://api.trakt.tv/movies/boxoffice";
 
@@ -50,8 +65,6 @@ public class BoxOfficeFragment extends Fragment implements
     private BoxOfficeAdapter mBoxOfficeAdapter;
 
     private ProgressBar mLoadingIndicator;
-
-    private TextView mErrorMessageTextView;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -90,9 +103,30 @@ public class BoxOfficeFragment extends Fragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_box_office, container, false);
 
+        //fake data.
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_TRAKT_ID, 112);
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_REVENUE, 1121212121);
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_TITLE, "Sex");
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_RANK, 1);
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_YEAR, 2018);
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_OVERVIEW, "Very hot.");
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_RELEASED, "23-84-2018");
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_TRAILER, "vk.com");
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_HOMEPAGE, "vk.com/sex");
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_RATE, 9.244);
+        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_CERTIFICATION, "R");
+
+        getActivity().getContentResolver().insert(BoxOfficeEntry.CONTENT_URI, contentValues);
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(refreshListener());
 
+        /*
+         * The ProgressBar that will indicate to the user that we are loading data. It will be
+         * hidden when no data is loading.
+         */
+        mLoadingIndicator = (ProgressBar) view.findViewById(R.id.pb_loading_indicator);
         /*
          * Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
          * do things like set the adapter of the RecyclerView and toggle the visibility.
@@ -124,16 +158,8 @@ public class BoxOfficeFragment extends Fragment implements
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
         mRecyclerView.setAdapter(mBoxOfficeAdapter);
 
-        /*
-         * The ProgressBar that will indicate to the user that we are loading data. It will be
-         * hidden when no data is loading.
-         */
-        mLoadingIndicator = (ProgressBar) view.findViewById(R.id.pb_loading_indicator);
+        showLoading();
 
-        /* This TextView is used to display errors and will be hidden if there are no errors */
-        mErrorMessageTextView = (TextView) view.findViewById(R.id.tv_error_message);
-
-        readFromSharedPreferences();
         return view;
     }
 
@@ -145,7 +171,6 @@ public class BoxOfficeFragment extends Fragment implements
         // BoxOfficeFragment implement SharedPreferences.OnSharedPreferenceChangeListener
         // which i can pass this.
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
-
     }
 
     @Override
@@ -154,70 +179,30 @@ public class BoxOfficeFragment extends Fragment implements
         // Unregisters OnPreferenceChangedListener callback to avoid any memory leaks.
         PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .unregisterOnSharedPreferenceChangeListener(this);
-
     }
 
     /**
      * Instantiate and return a new Loader for the given ID.
      *
-     * @param id   The ID whose loader is to be created.
-     * @param args Any arguments supplied by the caller.
+     * @param loaderId The ID whose loader is to be created.
+     * @param args     Any arguments supplied by the caller.
      * @return Return a new Loader instance that is ready to start loading.
      */
     @Override
-    public Loader<List<BoxOfficeMovie>> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<List<BoxOfficeMovie>>(getActivity()) {
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
+        switch (loaderId) {
+            case BOX_OFFICE_LOADER_ID:
+                Uri boxOfficeQueryUri = BoxOfficeEntry.CONTENT_URI;
 
-            /* This String array will hold and help cache data */
-            List<BoxOfficeMovie> mBoxOfficeMovies;
-
-            @Override
-            protected void onStartLoading() {
-                super.onStartLoading();
-
-                if (mBoxOfficeMovies != null) {
-                    deliverResult(mBoxOfficeMovies);
-                } else {
-                    mLoadingIndicator.setVisibility(View.VISIBLE);
-                    forceLoad();
-                }
-            }
-
-            /**
-             * This is the method of the AsyncTaskLoader that will load and parse the JSON data
-             * from TRAKT API in the background.
-             *
-             * @return List BoxOfficeMovie data from TRAKT API as an List of BoxOfficeMovie.
-             *         null if an error occurs
-             */
-            @Override
-            public List<BoxOfficeMovie> loadInBackground() {
-
-                URL url = NetworkUtils.buildUrl(TRAKT_API_BOX_OFFICE_URL);
-
-                try {
-                    String result = NetworkUtils.getResponseFromHttpUrl(url);
-
-                    List<BoxOfficeMovie> parsedBoxOfficeData = TraktTvAPIJsonUtils.BoxOfficeJsonStr(result);
-
-                    return parsedBoxOfficeData;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            /**
-             * Sends the result of the load to the registered listener.
-             *
-             * @param data The result of the load
-             */
-            @Override
-            public void deliverResult(List<BoxOfficeMovie> data) {
-                mBoxOfficeMovies = data;
-                super.deliverResult(data);
-            }
-        };
+                return new CursorLoader(getActivity(),
+                        boxOfficeQueryUri,
+                        MAIN_BOX_OFFICE_PROJECTION,
+                        null,
+                        null,
+                        null);
+            default:
+                throw new RuntimeException("Loader Not Implemented: " + loaderId);
+        }
     }
 
     /**
@@ -227,15 +212,13 @@ public class BoxOfficeFragment extends Fragment implements
      * @param boxOfficeData The data generated by the Loader.
      */
     @Override
-    public void onLoadFinished(Loader<List<BoxOfficeMovie>> loader, List<BoxOfficeMovie> boxOfficeData) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor boxOfficeData) {
 
         mLoadingIndicator.setVisibility(View.INVISIBLE);
-        mBoxOfficeAdapter.setBoxOfficeData(boxOfficeData);
+        mBoxOfficeAdapter.swapCursor(boxOfficeData);
 
-        if (boxOfficeData != null) {
-            showResultDataView();
-        } else {
-            showErrorMessageView();
+        if (boxOfficeData != null && boxOfficeData.getCount() != 0) {
+            showMoviesDataView();
         }
     }
 
@@ -247,12 +230,12 @@ public class BoxOfficeFragment extends Fragment implements
      * @param loader The Loader that is being reset.
      */
     @Override
-    public void onLoaderReset(Loader<List<BoxOfficeMovie>> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {
         // Of course, unless you use destroyLoader(),
         // this is called when everything is already dying
         // so a completely empty onLoaderReset() is
         // totally acceptable
-
+        mBoxOfficeAdapter.swapCursor(null);
     }
 
     /**
@@ -260,7 +243,7 @@ public class BoxOfficeFragment extends Fragment implements
      * refresh of our data, you can see that there is no data showing.
      */
     private void invalidateData() {
-        mBoxOfficeAdapter.setBoxOfficeData(null);
+        mBoxOfficeAdapter.swapCursor(null);
         getActivity().getSupportLoaderManager().restartLoader(BOX_OFFICE_LOADER_ID, null, this);
     }
 
@@ -268,15 +251,16 @@ public class BoxOfficeFragment extends Fragment implements
      * This method is overridden by our BoxOfficeFragment class in order to handle RecyclerView item
      * clicks.
      *
-     * @param boxOfficeMovie The weather for the day that was clicked
+     * @param movieTraktId The id for the movie that was clicked
      */
     @Override
-    public void onClick(String boxOfficeMovie) {
+    public void onClick(int movieTraktId) {
         //lunch detail activity when recycler view item clicked
 
         Intent lunchDetailActivity = new Intent(getActivity(), DetailActivity.class);
+        Uri movieUri = BoxOfficeEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(movieTraktId)).build();
+        lunchDetailActivity.setData(movieUri);
 
-        lunchDetailActivity.putExtra(Intent.EXTRA_TEXT, boxOfficeMovie);
 
         startActivity(lunchDetailActivity);
     }
@@ -289,24 +273,22 @@ public class BoxOfficeFragment extends Fragment implements
      * This method will make the View for the weather data visible and
      * hide the error message.
      */
-    private void showResultDataView() {
+    private void showMoviesDataView() {
 
-        // First, make sure the error is invisible
-        mErrorMessageTextView.setVisibility(View.INVISIBLE);
-        // Then, make sure the JSON data is visible
+        /* First, hide the loading indicator */
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
+        // Finally, make sure the box office movie data is visible
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     /**
-     * This method will make the error message visible and hide the weather
-     * View.
+     * This method will make the loading indicator visible and hide the weather View.
      */
-    private void showErrorMessageView() {
-
-        // First, hide the currently visible data
+    private void showLoading() {
+        // First, hide the weather data */
         mRecyclerView.setVisibility(View.INVISIBLE);
-        // Then, show the error
-        mErrorMessageTextView.setVisibility(View.VISIBLE);
+        // Then, show the loading indicator
+        mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
     private SwipeRefreshLayout.OnRefreshListener refreshListener() {
@@ -320,40 +302,6 @@ public class BoxOfficeFragment extends Fragment implements
         };
     }
 
-    private void readFromSharedPreferences() {
-        // Read from share preferences
-        // SharedPreferences: Interface for accessing and modifying preference data.
-        // PreferenceManager: Used to help create Preference hierarchies from activities or XML,
-        // create preference hierarchies from XML via  addPreferencesFromResource(int).
-        // getDefaultSharedPreferences: Gets a SharedPreferences instance  that points to the default
-        // file that is used by the preference framework in the given context.
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(getActivity());
-        // Get data form preferences file, which get method to use depends on the type object stored in the file.
-        // "show_revenue" :the string which is the key of the preference
-        // true :Value to return if this preference does not exist.
-        boolean showRevenuePref = sharedPreferences.getBoolean(
-                getString(R.string.pref_show_revenue_key),
-                getResources().getBoolean(R.bool.pref_show_revenue_default));
-        // set the visibility of the revenue text view to true or false
-        // depend on show_revenue check box user preference.
-        mBoxOfficeAdapter.setShowRevenue(showRevenuePref);
-        //set the rank text view text color depend on the string value return form list preference
-        //pref_rank_text_color.
-        String rankTextColorValue = sharedPreferences.getString(getString(R.string.pref_rank_text_color_key),
-                getString(R.string.pref_color_black_value));
-        mBoxOfficeAdapter.setRankTextColor(getActivity(), rankTextColorValue);
-
-        //get the revenue_text_size edit text preference value and convert it to float
-        // to set the revenue text size to what user choice.
-        float revenueTextSize = Float.parseFloat(sharedPreferences.getString(
-                getString(R.string.pref_revenue_text_size_key),
-                getString(R.string.pref_revenue_text_size_default_value)));
-        mBoxOfficeAdapter.setRevenueTextSize(revenueTextSize);
-
-
-    }
-
     /**
      * Called when a shared preference is changed.
      *
@@ -362,19 +310,6 @@ public class BoxOfficeFragment extends Fragment implements
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        //check what preference changed
-        if (key.equals(getString(R.string.pref_show_revenue_key))) {
-            boolean showRevenue = sharedPreferences.getBoolean(key,
-                    getResources().getBoolean(R.bool.pref_show_revenue_default));
-            mBoxOfficeAdapter.setShowRevenue(showRevenue);
-        } else if (key.equals(getString(R.string.pref_rank_text_color_key))) {
-            String s = sharedPreferences.getString(key, getString(R.string.pref_color_black_value));
-            mBoxOfficeAdapter.setRankTextColor(getActivity(), s);
-        } else if (key.equals(getString(R.string.pref_revenue_text_size_key))) {
-            float revenueTextSize = Float.parseFloat(sharedPreferences.getString(
-                    key,
-                    getString(R.string.pref_revenue_text_size_default_value)));
-            mBoxOfficeAdapter.setRevenueTextSize(revenueTextSize);
-        }
+
     }
 }
