@@ -56,7 +56,13 @@ public final class MoviesContract {
         public static final String COLUMN_MOVIE_REVENUE = "revenue";
         public static final String COLUMN_MOVIE_TITLE = "title";
         public static final String COLUMN_MOVIE_YEAR = "year";
-        public static final String COLUMN_TRAKT_ID = "trakt_id";
+        public static final String COLUMN_MOVIE_TRAKT_ID = "trakt_id";
+        public static final String COLUMN_MOVIE_OVERVIEW = "overview";
+        public static final String COLUMN_MOVIE_RELEASED = "released";
+        public static final String COLUMN_MOVIE_TRAILER = "trailer";
+        public static final String COLUMN_MOVIE_HOMEPAGE = "homepage";
+        public static final String COLUMN_MOVIE_RATE = "rate";
+        public static final String COLUMN_MOVIE_CERTIFICATION = "certification";
         public static final String COLUMN_MOVIE_RANK = "rank";
 
 

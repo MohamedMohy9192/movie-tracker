@@ -46,9 +46,15 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
                 BoxOfficeEntry.COLUMN_MOVIE_REVENUE + " INTEGER NOT NULL, " +
                 BoxOfficeEntry.COLUMN_MOVIE_TITLE + " TEXT NOT NULL, " +
                 BoxOfficeEntry.COLUMN_MOVIE_YEAR + " INTEGER NOT NULL, " +
-                BoxOfficeEntry.COLUMN_TRAKT_ID + " INTEGER NOT NULL, " +
+                BoxOfficeEntry.COLUMN_MOVIE_TRAKT_ID + " INTEGER NOT NULL, " +
+                BoxOfficeEntry.COLUMN_MOVIE_OVERVIEW + " TEXT NOT NULL, " +
+                BoxOfficeEntry.COLUMN_MOVIE_RELEASED + " TEXT NOT NULL, " +
+                BoxOfficeEntry.COLUMN_MOVIE_TRAILER + " TEXT NOT NULL, " +
+                BoxOfficeEntry.COLUMN_MOVIE_HOMEPAGE + " TEXT NOT NULL, " +
+                BoxOfficeEntry.COLUMN_MOVIE_RATE + " INTEGER NOT NULL, " +
+                BoxOfficeEntry.COLUMN_MOVIE_CERTIFICATION + " TEXT NOT NULL, " +
                 BoxOfficeEntry.COLUMN_MOVIE_RANK + " INTEGER NOT NULL, " +
-                " UNIQUE (" + BoxOfficeEntry.COLUMN_TRAKT_ID + ") ON CONFLICT REPLACE);";
+                " UNIQUE (" + BoxOfficeEntry.COLUMN_MOVIE_TRAKT_ID + ") ON CONFLICT REPLACE);";
 
         //Execute a single SQL statement that is NOT a SELECT/INSERT/UPDATE/DELETE.
         db.execSQL(SQL_CREATE_BOX_OFFICE_ENTRY);
