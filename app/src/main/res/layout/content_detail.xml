@@ -1,17 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.era.www.movietracker.detail.DetailActivity"
     tools:showIn="@layout/activity_detail">
 
     <TextView
+        android:id="@+id/tv_rank"
+        style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_movie_detail"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+        tools:text="1" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tv_revenue"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="5.2M" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="A Quiet Place" />
+
+    <TextView
+        android:id="@+id/tv_overview"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="A family is forced to live in silence while hiding from creatures that hunt by sound." />
+
+    <TextView
+        android:id="@+id/tv_released"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="2018-04-06" />
+
+    <TextView
+        android:id="@+id/tv_trailer"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="http://youtube.com/watch?v=WR7cc5t7tv8" />
+
+    <TextView
+        android:id="@+id/tv_homepage"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="http://aquietplacemovie.com" />
+
+    <TextView
+        android:id="@+id/tv_rate"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="7.91304" />
+
+    <TextView
+        android:id="@+id/tv_certification"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="PG-13" />
+
+</LinearLayout>

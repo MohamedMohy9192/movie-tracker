@@ -11,15 +11,27 @@ public class Movie {
     private int year;
     private int rank;
     private int movieTraktId;
+    private String overview;
+    private String released;
+    private String trailer;
+    private String homePage;
+    private int rate;
+    private String certification;
 
     private String formattedNumber;
 
-    public Movie(int revenue, String title, int year, int rank, int movieTraktId) {
+    public Movie(int revenue, String title, int year, int rank, int movieTraktId, String overview, String released, String trailer, String homePage, int rate, String certification) {
         this.revenue = revenue;
         this.title = title;
         this.year = year;
         this.rank = rank;
         this.movieTraktId = movieTraktId;
+        this.overview = overview;
+        this.released = released;
+        this.trailer = trailer;
+        this.homePage = homePage;
+        this.rate = rate;
+        this.certification = certification;
     }
 
     public int getRevenue() {
@@ -62,11 +74,51 @@ public class Movie {
         this.movieTraktId = movieTraktId;
     }
 
-    public String getFormattedNumber() {
-        return formattedNumber;
+    public String getOverview() {
+        return overview;
     }
 
-    public void setFormattedNumber(String formattedNumber) {
-        this.formattedNumber = formattedNumber;
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public String getReleased() {
+        return released;
+    }
+
+    public void setReleased(String released) {
+        this.released = released;
+    }
+
+    public String getTrailer() {
+        return trailer;
+    }
+
+    public void setTrailer(String trailer) {
+        this.trailer = trailer;
+    }
+
+    public String getHomePage() {
+        return homePage;
+    }
+
+    public void setHomePage(String homePage) {
+        this.homePage = homePage;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+    public String getCertification() {
+        return certification;
+    }
+
+    public void setCertification(String certification) {
+        this.certification = certification;
     }
 }
