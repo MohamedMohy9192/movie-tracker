@@ -7,10 +7,9 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.UnsupportedSchemeException;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.era.www.movietracker.data.MoviesContract.BoxOfficeEntry;
 
@@ -109,6 +108,10 @@ public class MoviesContentProvider extends ContentProvider {
                     // Ends the transaction causing a commit if setTransactionSuccessful() has been called
                     database.endTransaction();
                 }
+                if(rowsInserted > 0){
+                    //notify the resolver
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
                 return rowsInserted;
             default:
                 //If the URI does match match BOX_OFFICE, return the super implementation of bulkInsert
@@ -172,7 +175,7 @@ public class MoviesContentProvider extends ContentProvider {
                  */
                 long rowId = ContentUris.parseId(uri);
                 // Selection is the _ID column = ?, and the Selection args = the row ID from the URI
-                selection = BoxOfficeEntry._ID + "=?";
+                selection = BoxOfficeEntry.COLUMN_MOVIE_TRAKT_ID + "=?";
                 selectionArgs = new String[]{String.valueOf(rowId)};
 
                 cursor = database.query(
@@ -189,11 +192,22 @@ public class MoviesContentProvider extends ContentProvider {
 
         }
 
+        //notify the cursor that data changed at specific Uri
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         // Return the desired Cursor
         return cursor;
 
     }
 
+    /**
+     * getType() handles requests for the MIME type of data
+     * We are working with two types of data:
+     * 1) a directory and 2) a single row of data.
+     *
+     * @param uri
+     * @return
+     */
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
@@ -266,7 +280,10 @@ public class MoviesContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Insertion is not supported for " + uri);
         }
-
+         /* If we actually deleted any rows, notify that a change has occurred to this URI */
+         if (rowsDeleted != 0){
+             getContext().getContentResolver().notifyChange(uri, null);
+         }
         return rowsDeleted;
     }
 

@@ -3,17 +3,17 @@ package com.era.www.movietracker;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.Fragment;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.era.www.movietracker.movies.MoviesFragment;
 import com.era.www.movietracker.settings.SettingsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "tag";
     private DrawerLayout drawerLayout;
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] activityTitles;
 
-    private ActionBarDrawerToggle drawerToggle;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
 
     private Toolbar toolbar;
 
@@ -54,13 +54,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerToggle = setupDrawerToggle();
 
-        drawerLayout.addDrawerListener(drawerToggle);
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(mActionBarDrawerToggle);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        setUpNavigationView(navigationView);
-
+        navigationView.setNavigationItemSelectedListener(this);
 
         //Gets the header view at the specified position.
         View navHeader = navigationView.getHeaderView(0);
@@ -84,51 +88,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        drawerToggle = new ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-        return drawerToggle;
+
+        return mActionBarDrawerToggle;
     }
 
-    private void setUpNavigationView(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.nav_movies:
-                                navItemIndex = 0;
-                                CURRENT_TAG = TAG_MOVIES;
-                                break;
-                            case R.id.nav_tv_show:
-                                navItemIndex = 1;
-                                CURRENT_TAG = TAG_TV_FRAGMENT;
-                                break;
-                            case R.id.nav_people:
-                                navItemIndex = 2;
-                                CURRENT_TAG = TAG_PEOPLE_FRAGMENT;
-                                break;
-                            case R.id.nav_settings:
-                                Intent openSettingsActivity = new Intent(
-                                        MainActivity.this,
-                                        SettingsActivity.class);
-                                startActivity(openSettingsActivity);
-                                drawerLayout.closeDrawers();
-                                return true;
-                            default:
-                                navItemIndex = 0;
-                                CURRENT_TAG = TAG_MOVIES;
-                        }
-                        item.setChecked(true);
-                        loadHomeFragment();
-                        drawerLayout.closeDrawers();
-                        return true;
-                    }
-                });
-    }
+
 
     private void loadNavHeaderInfo(View navHeader) {
         ImageView profileImage = (ImageView) navHeader.findViewById(R.id.header_profile_image);
@@ -195,13 +159,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        drawerToggle.syncState();
+        mActionBarDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
+        mActionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -225,5 +189,37 @@ public class MainActivity extends AppCompatActivity {
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_movies:
+                navItemIndex = 0;
+                CURRENT_TAG = TAG_MOVIES;
+                break;
+            case R.id.nav_tv_show:
+                navItemIndex = 1;
+                CURRENT_TAG = TAG_TV_FRAGMENT;
+                break;
+            case R.id.nav_people:
+                navItemIndex = 2;
+                CURRENT_TAG = TAG_PEOPLE_FRAGMENT;
+                break;
+            case R.id.nav_settings:
+                Intent openSettingsActivity = new Intent(
+                        MainActivity.this,
+                        SettingsActivity.class);
+                startActivity(openSettingsActivity);
+                drawerLayout.closeDrawers();
+                return true;
+            default:
+                navItemIndex = 0;
+                CURRENT_TAG = TAG_MOVIES;
+        }
+        item.setChecked(true);
+        loadHomeFragment();
+        drawerLayout.closeDrawers();
+        return true;
     }
 }

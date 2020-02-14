@@ -24,6 +24,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -51,6 +52,17 @@
             android:name=".data.MoviesContentProvider"
             android:authorities="com.era.www.movietracker"
             android:exported="false" />
+
+        <service
+            android:name=".sync.BoxOfficeIntentService"
+            android:exported="false" />
+
+        <service android:name=".sync.BoxOfficeFirebaseJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

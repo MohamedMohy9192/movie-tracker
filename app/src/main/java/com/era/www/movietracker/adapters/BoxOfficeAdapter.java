@@ -1,22 +1,19 @@
 package com.era.www.movietracker.adapters;
 
 import android.database.Cursor;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.era.www.movietracker.R;
-import com.era.www.movietracker.data.MoviesContract.BoxOfficeEntry;
 import com.era.www.movietracker.movies.BoxOfficeFragment;
 import com.era.www.movietracker.utilities.FormatUtils;
 
-import java.text.DecimalFormat;
-
 /**
  * {@link BoxOfficeAdapter} exposes a list of box office data to a
- * {@link android.support.v7.widget.RecyclerView}
+ * {@link RecyclerView}
  */
 public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxOfficeAdapterViewHolder> {
 
@@ -54,7 +51,7 @@ public class BoxOfficeAdapter extends RecyclerView.Adapter<BoxOfficeAdapter.BoxO
      * @param parent   The ViewGroup that these ViewHolders are contained within.
      * @param viewType If your RecyclerView has more than one type of item  you
      *                 can use this viewType integer to provide a different layout. See
-     *                 {@link android.support.v7.widget.RecyclerView.Adapter#getItemViewType(int)}
+     *                 {@link RecyclerView.Adapter#getItemViewType(int)}
      *                 for more details.
      * @return A new BoxOfficeAdapterViewHolder that holds the View for each list item
      */

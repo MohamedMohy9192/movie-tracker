@@ -58,4 +58,7 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="action_Share">Share</string>
 
+    <string name="box_office_notification_title">Movie Tracker - Box Office Top Movie</string>
+    <string name="box_office_notification_channel_name">Box Office</string>
+
 </resources>

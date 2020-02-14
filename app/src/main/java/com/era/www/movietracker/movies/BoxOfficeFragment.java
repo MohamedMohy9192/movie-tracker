@@ -1,21 +1,20 @@
 package com.era.www.movietracker.movies;
 
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,8 @@ import com.era.www.movietracker.adapters.BoxOfficeAdapter;
 import com.era.www.movietracker.adapters.BoxOfficeAdapter.BoxOfficeAdapterOnClickHandler;
 import com.era.www.movietracker.data.MoviesContract.BoxOfficeEntry;
 import com.era.www.movietracker.detail.DetailActivity;
+import com.era.www.movietracker.sync.BoxOfficeSyncUtils;
+import com.era.www.movietracker.utilities.NotificationUtils;
 
 /**
  * SharedPreferences.OnSharedPreferenceChangeListener: Interface definition for a callback to be
@@ -95,6 +96,8 @@ public class BoxOfficeFragment extends Fragment implements
          * or within the fragment's onActivityCreated() method.
          */
         loadBoxOfficeData();
+
+
     }
 
     @Override
@@ -102,22 +105,6 @@ public class BoxOfficeFragment extends Fragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_box_office, container, false);
-
-        //fake data.
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_TRAKT_ID, 112);
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_REVENUE, 1121212121);
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_TITLE, "Sex");
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_RANK, 1);
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_YEAR, 2018);
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_OVERVIEW, "Very hot.");
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_RELEASED, "23-84-2018");
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_TRAILER, "vk.com");
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_HOMEPAGE, "vk.com/sex");
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_RATE, 9.244);
-        contentValues.put(BoxOfficeEntry.COLUMN_MOVIE_CERTIFICATION, "R");
-
-        getActivity().getContentResolver().insert(BoxOfficeEntry.CONTENT_URI, contentValues);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(refreshListener());
@@ -171,6 +158,8 @@ public class BoxOfficeFragment extends Fragment implements
         // BoxOfficeFragment implement SharedPreferences.OnSharedPreferenceChangeListener
         // which i can pass this.
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
+
+        BoxOfficeSyncUtils.initialize(getActivity());
     }
 
     @Override
@@ -244,6 +233,7 @@ public class BoxOfficeFragment extends Fragment implements
      */
     private void invalidateData() {
         mBoxOfficeAdapter.swapCursor(null);
+
         getActivity().getSupportLoaderManager().restartLoader(BOX_OFFICE_LOADER_ID, null, this);
     }
 
@@ -296,7 +286,8 @@ public class BoxOfficeFragment extends Fragment implements
         return new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                invalidateData();
+//                invalidateData();
+                NotificationUtils.notifyUserOfNewBoxOffice(getActivity());
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         };

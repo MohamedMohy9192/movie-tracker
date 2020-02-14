@@ -1,5 +1,6 @@
 package com.era.www.movietracker.utilities;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 /**
@@ -9,8 +10,9 @@ import java.text.DecimalFormat;
 public class FormatUtils {
 
     public static String formatMovieRevenue(int movieRevenue) {
-        double v = movieRevenue / 1000000.0;
-        DecimalFormat numberFormat = new DecimalFormat("$##.##M");
-        return numberFormat.format(v);
+        BigDecimal v = BigDecimal.valueOf(movieRevenue);
+        DecimalFormat df = new DecimalFormat("###,###,###.00");
+        //DecimalFormat numberFormat = new DecimalFormat("$##.##M");
+        return df.format(v);
     }
 }

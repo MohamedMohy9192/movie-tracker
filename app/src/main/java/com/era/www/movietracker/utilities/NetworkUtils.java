@@ -1,5 +1,6 @@
 package com.era.www.movietracker.utilities;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.era.www.movietracker.BuildConfig;
@@ -14,20 +15,26 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
+    private static final String TAG = "NetworkUtils";
+
     private final static String LOG_TAG = NetworkUtils.class.getSimpleName();
 
     private static final String MOVIE_API_KEY = BuildConfig.TRAKT_API_KEY;
 
     public static URL buildUrl(String requestUrl) {
+        Uri boxOfficeQueryUri = Uri.parse(requestUrl).buildUpon()
+                .appendQueryParameter("extended", "full")
+                .build();
 
-        URL url;
         try {
-            url = new URL(requestUrl);
+            URL url = new URL(boxOfficeQueryUri.toString());
+            Log.d(TAG, "buildUrl: " + url);
+            return url;
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Error with creating URL ", e);
             return null;
         }
-        return url;
+
     }
 
     /**

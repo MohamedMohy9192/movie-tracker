@@ -42,7 +42,7 @@ public class TraktTvAPIJsonUtils {
         String movieTitle = null;
         int movieYear = 0;
         int movieTraktId = 0;
-        int movieRank = 1;
+        int movieRank = 0;
         String overview = null;
         String released = null;
         String trailer = null;
@@ -57,7 +57,7 @@ public class TraktTvAPIJsonUtils {
 
                 JSONObject mainMovieObject = boxOfficeMoviesArray.getJSONObject(i);
 
-                movieRank = movieRank + 1;
+                movieRank++;
 
                 if (mainMovieObject.has(MOVIE_REVENUE_KEY)) {
                     movieRevenue = mainMovieObject.optInt(MOVIE_REVENUE_KEY);
@@ -80,24 +80,24 @@ public class TraktTvAPIJsonUtils {
                             movieTraktId = movieIdsObject.optInt(TRAKT_ID_KEY);
                         }
                     }
-                }
-                if (mainMovieObject.has(MOVIE_OVERVIEW_KEY)) {
-                    overview = mainMovieObject.optString(MOVIE_OVERVIEW_KEY);
-                }
-                if (mainMovieObject.has(MOVIE_RELEASED_KEY)) {
-                    released = mainMovieObject.optString(MOVIE_RELEASED_KEY);
-                }
-                if (mainMovieObject.has(MOVIE_TRAILER_KEY)) {
-                    trailer = mainMovieObject.optString(MOVIE_TRAILER_KEY);
-                }
-                if (mainMovieObject.has(MOVIE_HOMEPAGE_KEY)) {
-                    homePage = mainMovieObject.optString(MOVIE_HOMEPAGE_KEY);
-                }
-                if (mainMovieObject.has(MOVIE_RATE_KEY)) {
-                    rate = mainMovieObject.optInt(MOVIE_RATE_KEY);
-                }
-                if (mainMovieObject.has(MOVIE_CERTIFICATION_KEY)) {
-                    certification = mainMovieObject.optString(MOVIE_CERTIFICATION_KEY);
+                    if (supMovieObject.has(MOVIE_OVERVIEW_KEY)) {
+                        overview = supMovieObject.optString(MOVIE_OVERVIEW_KEY);
+                    }
+                    if (supMovieObject.has(MOVIE_RELEASED_KEY)) {
+                        released = supMovieObject.optString(MOVIE_RELEASED_KEY);
+                    }
+                    if (supMovieObject.has(MOVIE_TRAILER_KEY)) {
+                        trailer = supMovieObject.optString(MOVIE_TRAILER_KEY);
+                    }
+                    if (supMovieObject.has(MOVIE_HOMEPAGE_KEY)) {
+                        homePage = supMovieObject.optString(MOVIE_HOMEPAGE_KEY);
+                    }
+                    if (supMovieObject.has(MOVIE_RATE_KEY)) {
+                        rate = supMovieObject.optInt(MOVIE_RATE_KEY);
+                    }
+                    if (supMovieObject.has(MOVIE_CERTIFICATION_KEY)) {
+                        certification = supMovieObject.optString(MOVIE_CERTIFICATION_KEY);
+                    }
                 }
 
                 Movie boxOfficeMovie = new Movie(
