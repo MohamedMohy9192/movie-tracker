@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    android:label="kjkjkjk"
+    app:startDestination="@id/nav_movies">
+    <fragment
+        android:id="@+id/nav_tv_show"
+        android:name="com.era.www.movietracker.TvShowFragment"
+        android:label="fragment_tv_show_framgent"
+        tools:layout="@layout/fragment_tv_show_framgent" />
+    <fragment
+        android:id="@+id/nav_people"
+        android:name="com.era.www.movietracker.PeopleFragment"
+        android:label="fragment_people"
+        tools:layout="@layout/fragment_people" />
+    <fragment
+        android:id="@+id/nav_movies"
+        android:name="com.era.www.movietracker.movies.MoviesFragment"
+        android:label="fragment_movies"
+        tools:layout="@layout/fragment_movies" />
+</navigation>
