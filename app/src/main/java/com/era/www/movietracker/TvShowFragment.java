@@ -23,8 +23,6 @@ public class TvShowFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        TabLayout layout = (TabLayout) getActivity().findViewById(R.id.main_tab_layout);
-        layout.setVisibility(View.GONE);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tv_show_framgent, container, false);
     }
